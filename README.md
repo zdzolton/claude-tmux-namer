@@ -21,7 +21,6 @@ Using Claude Code slash commands:
 ```
 /plugin marketplace add git@github.com:cosgroveb/claude-tmux-namer.git
 /plugin install tmux-window-namer@claude-tmux-namer
-/plugin enable tmux-window-namer@claude-tmux-namer
 ```
 
 Or clone and install manually:
@@ -30,7 +29,6 @@ Or clone and install manually:
 git clone git@github.com:cosgroveb/claude-tmux-namer.git
 cd claude-tmux-namer
 make install
-claude plugin enable tmux-window-namer@claude-tmux-namer
 ```
 
 ## Uninstallation
