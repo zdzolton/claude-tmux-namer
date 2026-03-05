@@ -51,11 +51,12 @@ mkdir -p "$(dirname "$LOG_FILE")"
     exit 0
   fi
 
-  # Extract the name from assistant text messages (filter to JSON lines first)
-  name=$(echo "$output" | grep '^{' | jq -rs '[.[] | select(.type == "assistant") | .message.content[]? | select(.type == "text") | .text] | add // empty' | tr -d '\n')
-
   # Extract cost from result message and log it
   result_line=$(echo "$output" | grep '"type":"result"' | head -1)
+
+  # Extract the name from the result line (avoids jq parse errors from unescaped
+  # control characters that the CLI emits inside thinking block content)
+  name=$(echo "$result_line" | jq -r '.result // empty' | tr -d '\n')
   if [[ -n $result_line ]]; then
     cost=$(echo "$result_line" | jq -r '.total_cost_usd // 0')
     input_tokens=$(echo "$result_line" | jq -r '.usage.input_tokens // 0')
