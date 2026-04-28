@@ -1,12 +1,13 @@
 #!/usr/bin/env zsh
 #
-# tmux-namer-start.zsh - Set a placeholder tmux window name when a Claude session starts
+# tmux-namer-start.zsh - Lock the current tmux window name when a Claude session starts
 #
 # Prevents the Claude CLI version number from appearing as the window name.
 # tmux's allow-rename picks up whatever terminal title Claude sets on startup
 # (which includes its version, e.g. "2.1.84"). This script races ahead of that
-# by immediately setting "claude..." via a tmux command (which allow-rename cannot
-# override). The Stop hook will replace this placeholder with a descriptive name.
+# by re-setting the current window name via a tmux command (which allow-rename
+# cannot override), preserving the original name until the Stop hook replaces
+# it with a descriptive one.
 #
 
 export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:$PATH"
@@ -21,4 +22,5 @@ window_target=$(tmux list-panes -a -F '#{pane_tty} #{session_name}:#{window_id}'
   awk -v tty="$claude_tty" '$1 == tty { print $2; exit }')
 [[ -z $window_target ]] && exit 0
 
-tmux rename-window -t "$window_target" "claude..."
+current_name=$(tmux display-message -t "$window_target" -p '#{window_name}' 2>/dev/null)
+[[ -n $current_name ]] && tmux rename-window -t "$window_target" "$current_name"
