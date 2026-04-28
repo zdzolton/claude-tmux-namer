@@ -1,4 +1,4 @@
-.PHONY: install uninstall clean reinstall
+.PHONY: install uninstall clean reinstall test
 
 PLUGIN_NAME := tmux-window-namer
 MARKETPLACE_NAME := claude-tmux-namer
@@ -24,3 +24,11 @@ clean:
 	@echo "Done."
 
 reinstall: clean install
+
+test:
+	@echo "Checking zsh syntax..."
+	@zsh -n scripts/tmux-namer-start.zsh && echo "  ✓ tmux-namer-start.zsh"
+	@zsh -n scripts/tmux-namer.zsh && echo "  ✓ tmux-namer.zsh"
+	@echo "Validating plugin manifest..."
+	@claude plugin validate ./ && echo "  ✓ plugin.json"
+	@echo "All checks passed."

@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "description": "Automatically names tmux windows based on current work context",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/tmux-namer-start.zsh",
+            "timeout": 2
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
